@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <form method="post">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Dynamic HTML</div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="tblDimensions">
+                            <thead>
+                                <tr>
+                                    <th>Make</th>
+                                    <th>VIN</th>
+                                    <th>Year</th>
+                                    <th>Color</th>
+                                    <th>Model</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    <tr class="rowClass">
+                                        <td>
+                                            <input type="text" class="form-control formClass" placeholder="MAKE" name="Make" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control formClass" placeholder="VIN NUMBER" name="VIN" />
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control formClass" placeholder="YEAR" name="Year" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control formClass" placeholder="COLOR" name="Color" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control formClass" placeholder="MODEL" name="Model" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <button type="button" class="form-link btn btn-sm btn-no-focus btn-ghost-primary" id="addRow"><i class="tio-add"></i> Add Dimension</button>
+                    </div>
+                    <input type="hidden" id="DynamicTextBoxValues" name="DynamicTextBoxValues" />
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="text-right">
+                    <input type="submit" class="btn btn-primary" value="Save" id="btnSave"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        var uniqueID = 6;
+        $('#addRow').on('click',
+            function () {
+                var html = `<tr class="rowClass">
+                                            <td class="js-form-message"><input type="text" class="form-control formClass"  name="Make" placeholder="MAKE"></td>
+                                            <td class="js-form-message"><input type="text" class="form-control formClass"   name="VIN" placeholder="VIN NUMBER"></td>
+                                            <td class="js-form-message"><input type="number" class="form-control formClass"   name="Year" placeholder="YEAR"></td>
+                                            <td class="js-form-message"><input type="text" class="form-control formClass"   name="Color" placeholder="COLOR"></td>
+                                            <td class="js-form-message"><input type="text" class="form-control formClass" placeholder="MODEL" name="Model" ></td>
+                                        </tr>`;
+
+                $('#tblDimensions tr:last').after(html);
+                uniqueID++;
+            });
+    </script>
+    <script>
+        $("#btnSave").on('click', function ()
+        {
+            const res = $('.rowClass').map(function ()
+            {
+                var obj = {};
+                $(this).find('input.formClass').each(function (i, el)
+                {
+                    if (el.value != "0" && el.value != "") {
+                        obj[el.name] = el.value;
+                    }
+                })
+                return obj
+            }).get()
+
+            document.getElementById('DynamicTextBoxValues').value = '';
+            $('#DynamicTextBoxValues').val(encodeURIComponent(JSON.stringify(res)));
+        });
+    </script>
+}
